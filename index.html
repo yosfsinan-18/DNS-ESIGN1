@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YUSEF STORE - 160x Turbo VIP DNS</title>
+    <title>YUSEF SINAN - 160x Turbo VIP DNS</title>
     <style>
         body {
             background-color: #080c14;
@@ -56,6 +56,7 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(10px);
+            text-align: left;
         }
         .section-title {
             color: #38bdf8;
@@ -63,6 +64,7 @@
             font-weight: 700;
             letter-spacing: 1.5px;
             margin-bottom: 15px;
+            text-align: center;
         }
         .row {
             background: rgba(30, 41, 59, 0.5);
@@ -74,9 +76,10 @@
             margin-bottom: 10px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .row span:first-child { color: #94a3b8; font-size: 14px; }
-        .row span:last-child { color: #38bdf8; font-weight: 700; font-size: 14px; }
+        .row span:first-child { color: #94a3b8; font-size: 13px; }
+        .row span:last-child { color: #38bdf8; font-weight: 700; font-size: 13px; }
         .snap { color: #fbbf24 !important; }
+        .live-val { color: #10b981 !important; }
         
         /* Two Buttons at the bottom */
         .btn-group {
@@ -167,6 +170,23 @@
         <h1>YUSEF STORE</h1>
         <div class="subtitle">160x Turbo DNS & iOS Unlock Platform</div>
 
+        <!-- Real-time Visitor & Mobile Network Stats Card -->
+        <div class="card">
+            <div class="section-title">📊 زانیاریێن ڕاستەقینە یێن مۆبایلا تە</div>
+            <div class="row">
+                <span>جۆرێ تۆرێ (Network):</span>
+                <span id="netType" class="live-val">پشکنین...</span>
+            </div>
+            <div class="row">
+                <span>خێراییا مەزن (Downlink):</span>
+                <span id="netSpeed" class="live-val">پشکنین...</span>
+            </div>
+            <div class="row">
+                <span>رەوشا پشکداریێ:</span>
+                <span class="live-val">160x Turbo Ready</span>
+            </div>
+        </div>
+
         <div class="card">
             <div class="section-title">✨ DEVELOPER CHANNELS ✨</div>
             <div class="row">
@@ -183,12 +203,14 @@
             </div>
         </div>
 
+        <!-- Two Buttons at the bottom -->
         <div class="btn-group">
-            <button class="btn btn-info" onclick="showUserInfo()">👤 زانینا ناڤ و پشکداریا من (My Info)</button>
+            <button class="btn btn-info" onclick="showUserInfo()">👤 زانینا ناسنامەیا خاوەن پڕۆژە</button>
             <button id="installBtn" class="btn" onclick="startInstall()">🚀 INSTALL 160x TURBO DNS</button>
         </div>
     </div>
 
+    <!-- User Info Modal -->
     <div id="userModal" onclick="closeUserInfo()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3>👑 زانیاریێن خاوەن پڕۆژە</h3>
@@ -197,12 +219,28 @@
         </div>
     </div>
 
+    <!-- Loading Screen -->
     <div id="loader">
         <div class="spinner"></div>
         <div id="percent">0%</div>
     </div>
 
     <script>
+        // Detect Visitor Network Type & Speed automatically
+        window.addEventListener('DOMContentLoaded', () => {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const netTypeEl = document.getElementById('netType');
+            const netSpeedEl = document.getElementById('netSpeed');
+
+            if (connection) {
+                netTypeEl.innerText = (connection.effectiveType || 'Wi-Fi / 5G').toUpperCase();
+                netSpeedEl.innerText = (connection.downlink ? connection.downlink + ' Mbps (160x Boosted)' : 'Turbo High-Speed');
+            } else {
+                netTypeEl.innerText = 'VIP Wi-Fi Network';
+                netSpeedEl.innerText = '160x Ultra Fast';
+            }
+        });
+
         function showUserInfo() {
             document.getElementById("userModal").style.display = "flex";
         }
