@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YUSEF STORE - VIP DNS Platform</title>
+    <title>YUSEF STORE - 160x Turbo VIP DNS</title>
     <style>
         body {
             background-color: #080c14;
@@ -24,14 +24,14 @@
         }
         .logo-circle {
             width: 80px; height: 80px;
-            background: radial-gradient(circle, rgba(56,189,248,0.2) 0%, rgba(8,12,20,0.8) 80%);
+            background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, rgba(8,12,20,0.9) 80%);
             border: 2px solid #38bdf8;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px auto;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
             font-size: 30px;
         }
         h1 {
@@ -78,7 +78,7 @@
         .row span:last-child { color: #38bdf8; font-weight: 700; font-size: 14px; }
         .snap { color: #fbbf24 !important; }
         
-        /* Buttons Layout */
+        /* Two Buttons at the bottom */
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -89,7 +89,7 @@
             background: linear-gradient(135deg, #2563eb, #3b82f6);
             color: #ffffff;
             border: none;
-            padding: 15px;
+            padding: 16px;
             font-weight: 800;
             font-size: 15px;
             border-radius: 14px;
@@ -99,14 +99,18 @@
             width: 100%;
         }
         .btn:active { transform: scale(0.97); }
-        .btn-secondary {
-            background: rgba(30, 41, 59, 0.8);
+        .btn-info {
+            background: rgba(30, 41, 59, 0.85);
             border: 1px solid rgba(56, 189, 248, 0.3);
             color: #38bdf8;
             box-shadow: none;
         }
+        .btn.done {
+            background: linear-gradient(135deg, #059669, #10b981) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+        }
         
-        /* Modal Popup for User Info */
+        /* Modal Popup */
         #userModal {
             display: none;
             position: fixed;
@@ -127,7 +131,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
         .modal-content h3 { color: #38bdf8; margin-top: 0; }
-        .modal-content p { color: #94a3b8; font-size: 14px; }
+        .modal-content p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
         .close-btn {
             background: #38bdf8; color: #080c14; border: none;
             padding: 10px 20px; font-weight: bold; border-radius: 8px;
@@ -159,9 +163,9 @@
 <body>
 
     <div class="container">
-        <div class="logo-circle">👑</div>
+        <div class="logo-circle">⚡</div>
         <h1>YUSEF STORE</h1>
-        <div class="subtitle">VIP DNS & Security Platform</div>
+        <div class="subtitle">160x Turbo DNS & iOS Unlock Platform</div>
 
         <div class="card">
             <div class="section-title">✨ DEVELOPER CHANNELS ✨</div>
@@ -179,23 +183,20 @@
             </div>
         </div>
 
-        <!-- Two Buttons Section -->
         <div class="btn-group">
-            <button class="btn btn-secondary" onclick="showUserInfo()">👤 ناسینا کەسێ (User Info)</button>
-            <button id="installBtn" class="btn" onclick="startInstall()">⚡ INSTALL VIP DNS</button>
+            <button class="btn btn-info" onclick="showUserInfo()">👤 زانینا ناڤ و پشکداریا من (My Info)</button>
+            <button id="installBtn" class="btn" onclick="startInstall()">🚀 INSTALL 160x TURBO DNS</button>
         </div>
     </div>
 
-    <!-- User Info Modal -->
     <div id="userModal" onclick="closeUserInfo()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3>زانیاریێن سەردانیکەر</h3>
-            <p>سلاڤ! تۆ نوکا ل سەر پلاتفۆرمی فەرمی یێ <b>yousef_sinan</b> مە. سیستەمێ تۆرێ بۆ تە ئامادەیە.</p>
+            <h3>👑 زانیاریێن خاوەن پڕۆژە</h3>
+            <p>سلاڤ! ئەڤ وێبسایتە و سێرڤەرێن <b>160x Turbo DNS</b> ب تەواوی ژلایێ <b>yousef_sinan</b> ڤە هاتینە دروستکرن بۆ ب هێزکرنا تۆرێ ل سەر ئایۆس.</p>
             <button class="close-btn" onclick="closeUserInfo()">باشە</button>
         </div>
     </div>
 
-    <!-- Loading Screen -->
     <div id="loader">
         <div class="spinner"></div>
         <div id="percent">0%</div>
@@ -224,11 +225,12 @@
                     clearInterval(interval);
                     setTimeout(function() {
                         loader.style.display = "none";
-                        btn.innerText = "DONE ✓";
+                        btn.innerText = "DONE ✓ (160x UNLOCKED)";
+                        btn.classList.add("done");
                         window.location.href = "dns.mobileconfig";
-                    }, 200);
+                    }, 300);
                 }
-            }, 150);
+            }, 120);
         }
     </script>
 </body>
