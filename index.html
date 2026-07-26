@@ -1,275 +1,298 @@
-<!DOCTYPE html>
-<html lang="ku" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YUSEF SINAN - 160x Turbo VIP DNS</title>
-    <style>
-        body {
-            background-color: #080c14;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-        }
-        .logo-circle {
-            width: 80px; height: 80px;
-            background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, rgba(8,12,20,0.9) 80%);
-            border: 2px solid #38bdf8;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px auto;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-            font-size: 30px;
-        }
-        h1 {
-            color: #38bdf8;
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-        .subtitle {
-            color: #fbbf24;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
-        }
-        .card {
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            text-align: left;
-        }
-        .section-title {
-            color: #38bdf8;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .row {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 12px;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .row span:first-child { color: #94a3b8; font-size: 13px; }
-        .row span:last-child { color: #38bdf8; font-weight: 700; font-size: 13px; }
-        .snap { color: #fbbf24 !important; }
-        .live-val { color: #10b981 !important; }
+-- Import Orion Library
+local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()
+
+-- ID yé wêné té yé nû
+local MyCustomIcon = "rbxassetid://119908561858151"
+
+-- Create Main Window
+local Window = OrionLib:MakeWindow({
+    Name = "CYBER CROWN HUB", 
+    HidePremium = false, 
+    SaveConfig = true, 
+    ConfigFolder = "CyberCrownConfig"
+})
+
+-- Global Variables
+local FlyEnabled = false
+local FlySpeed = 50
+local NoclipEnabled = false
+local TargetPlayer = nil
+local FollowConnection = nil
+
+----------------------------------------------------
+-- TAB 1: HOME
+----------------------------------------------------
+local HomeTab = Window:MakeTab({
+    Name = "HOME",
+    Icon = MyCustomIcon, -- ئایکۆنێ تە ل سەر ئاڵایا تابی
+    PremiumOnly = false
+})
+
+HomeTab:AddParagraph("Welcome", "Cyber Crown Script Suite Enabled!")
+
+-- Display Custom Logo Image inside HOME Tab
+HomeTab:AddImageLabel({
+    Name = "Custom Logo",
+    Image = MyCustomIcon -- وێنەیێ تە یێ تایبەت
+})
+
+HomeTab:AddButton({
+    Name = "Join Hack / Community",
+    Callback = function()
+        setclipboard("https://t.me/your_community")
+        OrionLib:MakeNotification({
+            Name = "Success",
+            Content = "Link copied to clipboard!",
+            Image = MyCustomIcon, -- ئایکۆنێ تە د ناڤ نۆتیفیکەیشنێ دا
+            Time = 5
+        })
+    end
+})
+
+----------------------------------------------------
+-- TAB 2: PLAYER
+----------------------------------------------------
+local PlayerTab = Window:MakeTab({
+    Name = "PLAYER",
+    Icon = "rbxassetid://6034509993",
+    PremiumOnly = false
+})
+
+-- Noclip Toggle
+PlayerTab:AddToggle({
+    Name = "Noclip",
+    Default = false,
+    Callback = function(Value)
+        NoclipEnabled = Value
+    end
+})
+
+game:GetService("RunService").Stepped:Connect(function()
+    if NoclipEnabled and game.Players.LocalPlayer.Character then
+        for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+-- Custom Speed
+PlayerTab:AddSlider({
+    Name = "WalkSpeed",
+    Min = 16,
+    Max = 500,
+    Default = 16,
+    Color = Color3.fromRGB(255,255,255),
+    Increment = 1,
+    ValueName = "Speed",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+-- Custom Jump
+PlayerTab:AddSlider({
+    Name = "JumpPower",
+    Min = 50,
+    Max = 500,
+    Default = 50,
+    Color = Color3.fromRGB(255,255,255),
+    Increment = 1,
+    ValueName = "Jump",
+    Callback = function(Value)
+        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+            game.Players.LocalPlayer.Character.Humanoid.UseJumpPower = true
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+        end
+    end
+})
+
+-- Fly System
+PlayerTab:AddToggle({
+    Name = "Enable Fly",
+    Default = false,
+    Callback = function(Value)
+        FlyEnabled = Value
+        local LocalPlayer = game.Players.LocalPlayer
+        local Character = LocalPlayer.Character
+        if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
         
-        /* Two Buttons at the bottom */
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        .btn {
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
-            color: #ffffff;
-            border: none;
-            padding: 16px;
-            font-weight: 800;
-            font-size: 15px;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-            transition: 0.2s;
-            width: 100%;
-        }
-        .btn:active { transform: scale(0.97); }
-        .btn-info {
-            background: rgba(30, 41, 59, 0.85);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            color: #38bdf8;
-            box-shadow: none;
-        }
-        .btn.done {
-            background: linear-gradient(135deg, #059669, #10b981) !important;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
-        }
-        
-        /* Modal Popup */
-        #userModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(8, 12, 20, 0.85);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background: #0f172a;
-            border: 1px solid #38bdf8;
-            padding: 25px;
-            border-radius: 20px;
-            width: 80%;
-            max-width: 320px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
-        .modal-content h3 { color: #38bdf8; margin-top: 0; }
-        .modal-content p { color: #94a3b8; font-size: 14px; line-height: 1.5; }
-        .close-btn {
-            background: #38bdf8; color: #080c14; border: none;
-            padding: 10px 20px; font-weight: bold; border-radius: 8px;
-            cursor: pointer; margin-top: 15px;
-        }
+        local HRP = Character.HumanoidRootPart
 
-        /* Loading Screen */
-        #loader {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(8, 12, 20, 0.9);
-            z-index: 999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .spinner {
-            width: 70px; height: 70px;
-            border: 6px solid rgba(56, 189, 248, 0.1);
-            border-top: 6px solid #38bdf8;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #percent { margin-top: 20px; font-size: 24px; font-weight: 800; color: #38bdf8; }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <div class="logo-circle">⚡</div>
-        <h1>YUSEF STORE</h1>
-        <div class="subtitle">160x Turbo DNS & iOS Unlock Platform</div>
-
-        <!-- Real-time Visitor & Mobile Network Stats Card -->
-        <div class="card">
-            <div class="section-title">📊 زانیاریێن ڕاستەقینە یێن مۆبایلا تە</div>
-            <div class="row">
-                <span>جۆرێ تۆرێ (Network):</span>
-                <span id="netType" class="live-val">پشکنین...</span>
-            </div>
-            <div class="row">
-                <span>خێراییا مەزن (Downlink):</span>
-                <span id="netSpeed" class="live-val">پشکنین...</span>
-            </div>
-            <div class="row">
-                <span>رەوشا پشکداریێ:</span>
-                <span class="live-val">160x Turbo Ready</span>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="section-title">✨ DEVELOPER CHANNELS ✨</div>
-            <div class="row">
-                <span>Snapchat</span>
-                <span class="snap">K4BOOS_SURCHI</span>
-            </div>
-            <div class="row">
-                <span>TikTok</span>
-                <span>yousef_surchi</span>
-            </div>
-            <div class="row">
-                <span>Telegram</span>
-                <span>YUSEF_SURCHI</span>
-            </div>
-        </div>
-
-        <!-- Two Buttons at the bottom -->
-        <div class="btn-group">
-            <button class="btn btn-info" onclick="showUserInfo()">👤 زانینا ناسنامەیا خاوەن پڕۆژە</button>
-            <button id="installBtn" class="btn" onclick="startInstall()">🚀 INSTALL 160x TURBO DNS</button>
-        </div>
-    </div>
-
-    <!-- User Info Modal -->
-    <div id="userModal" onclick="closeUserInfo()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h3>👑 زانیاریێن خاوەن پڕۆژە</h3>
-            <p>سلاڤ! ئەڤ وێبسایتە و سێرڤەرێن <b>160x Turbo DNS</b> ب تەواوی ژلایێ <b>yousef_sinan</b> ڤە هاتینە دروستکرن بۆ ب هێزکرنا تۆرێ ل سەر ئایۆس.</p>
-            <button class="close-btn" onclick="closeUserInfo()">باشە</button>
-        </div>
-    </div>
-
-    <!-- Loading Screen -->
-    <div id="loader">
-        <div class="spinner"></div>
-        <div id="percent">0%</div>
-    </div>
-
-    <script>
-        // Detect Visitor Network Type & Speed automatically
-        window.addEventListener('DOMContentLoaded', () => {
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            const netTypeEl = document.getElementById('netType');
-            const netSpeedEl = document.getElementById('netSpeed');
-
-            if (connection) {
-                netTypeEl.innerText = (connection.effectiveType || 'Wi-Fi / 5G').toUpperCase();
-                netSpeedEl.innerText = (connection.downlink ? connection.downlink + ' Mbps (160x Boosted)' : 'Turbo High-Speed');
-            } else {
-                netTypeEl.innerText = 'VIP Wi-Fi Network';
-                netSpeedEl.innerText = '160x Ultra Fast';
-            }
-        });
-
-        function showUserInfo() {
-            document.getElementById("userModal").style.display = "flex";
-        }
-        function closeUserInfo() {
-            document.getElementById("userModal").style.display = "none";
-        }
-
-        function startInstall() {
-            var loader = document.getElementById("loader");
-            var percentText = document.getElementById("percent");
-            var btn = document.getElementById("installBtn");
+        if FlyEnabled then
+            local BodyVelocity = Instance.new("BodyVelocity")
+            BodyVelocity.Name = "FlyVelocity"
+            BodyVelocity.Parent = HRP
+            BodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
             
-            loader.style.display = "flex";
-            var currentPercent = 0;
-            
-            var interval = setInterval(function() {
-                currentPercent += 20;
-                percentText.innerText = currentPercent + "%";
-                if (currentPercent >= 100) {
-                    clearInterval(interval);
-                    setTimeout(function() {
-                        loader.style.display = "none";
-                        btn.innerText = "DONE ✓ (160x UNLOCKED)";
-                        btn.classList.add("done");
-                        window.location.href = "dns.mobileconfig";
-                    }, 300);
-                }
-            }, 120);
-        }
-    </script>
-</body>
-</html>
+            local BodyGyro = Instance.new("BodyGyro")
+            BodyGyro.Name = "FlyGyro"
+            BodyGyro.Parent = HRP
+            BodyGyro.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+
+            task.spawn(function()
+                while FlyEnabled and task.wait() do
+                    local Camera = workspace.CurrentCamera
+                    local MoveDir = Vector3.new()
+                    
+                    local UIS = game:GetService("UserInputService")
+                    if UIS:IsKeyDown(Enum.KeyCode.W) then MoveDir = MoveDir + Camera.CFrame.LookVector end
+                    if UIS:IsKeyDown(Enum.KeyCode.S) then MoveDir = MoveDir - Camera.CFrame.LookVector end
+                    if UIS:IsKeyDown(Enum.KeyCode.A) then MoveDir = MoveDir - Camera.CFrame.RightVector end
+                    if UIS:IsKeyDown(Enum.KeyCode.D) then MoveDir = MoveDir + Camera.CFrame.RightVector end
+                    if UIS:IsKeyDown(Enum.KeyCode.Space) then MoveDir = MoveDir + Vector3.new(0,1,0) end
+                    if UIS:IsKeyDown(Enum.KeyCode.LeftShift) then MoveDir = MoveDir - Vector3.new(0,1,0) end
+
+                    BodyVelocity.Velocity = MoveDir * FlySpeed
+                    BodyGyro.CFrame = Camera.CFrame
+                end
+                
+                if BodyVelocity then BodyVelocity:Destroy() end
+                if BodyGyro then BodyGyro:Destroy() end
+            end)
+        else
+            if HRP:FindFirstChild("FlyVelocity") then HRP.FlyVelocity:Destroy() end
+            if HRP:FindFirstChild("FlyGyro") then HRP.FlyGyro:Destroy() end
+        end
+    end
+})
+
+PlayerTab:AddSlider({
+    Name = "Fly Speed",
+    Min = 10,
+    Max = 300,
+    Default = 50,
+    Color = Color3.fromRGB(0,255,100),
+    Increment = 5,
+    ValueName = "Speed",
+    Callback = function(Value)
+        FlySpeed = Value
+    end
+})
+
+----------------------------------------------------
+-- TAB 3: TARGET
+----------------------------------------------------
+local TargetTab = Window:MakeTab({
+    Name = "TARGET",
+    Icon = "rbxassetid://6031094678",
+    PremiumOnly = false
+})
+
+TargetTab:AddTextbox({
+    Name = "Search Username",
+    Default = "",
+    TextDisappear = false,
+    Callback = function(Value)
+        for _, v in pairs(game.Players:GetPlayers()) do
+            if string.sub(string.lower(v.Name), 1, #Value) == string.lower(Value) or string.sub(string.lower(v.DisplayName), 1, #Value) == string.lower(Value) then
+                TargetPlayer = v
+                OrionLib:MakeNotification({
+                    Name = "Target Selected",
+                    Content = "Found: " .. v.Name,
+                    Time = 3
+                })
+                break
+            end
+        end
+    end
+})
+
+TargetTab:AddButton({
+    Name = "View Player",
+    Callback = function()
+        if TargetPlayer and TargetPlayer.Character then
+            workspace.CurrentCamera.CameraSubject = TargetPlayer.Character:FindFirstChildOfClass("Humanoid")
+        end
+    end
+})
+
+TargetTab:AddButton({
+    Name = "Unview Player",
+    Callback = function()
+        if game.Players.LocalPlayer.Character then
+            workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        end
+    end
+})
+
+TargetTab:AddToggle({
+    Name = "Sit On Player's Head & Follow",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            if TargetPlayer then
+                FollowConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                    local LocalChar = game.Players.LocalPlayer.Character
+                    local TargetChar = TargetPlayer.Character
+                    
+                    if LocalChar and TargetChar and TargetChar:FindFirstChild("Head") then
+                        local LocalHRP = LocalChar:FindFirstChild("HumanoidRootPart")
+                        local LocalHum = LocalChar:FindFirstChildOfClass("Humanoid")
+                        
+                        if LocalHum then
+                            LocalHum.Sit = true
+                        end
+                        
+                        if LocalHRP then
+                            LocalHRP.CFrame = TargetChar.Head.CFrame * CFrame.new(0, 2, 0)
+                        end
+                    end
+                end)
+            end
+        else
+            if FollowConnection then
+                FollowConnection:Disconnect()
+                FollowConnection = nil
+            end
+            if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Sit = false
+            end
+        end
+    end
+})
+
+----------------------------------------------------
+-- TAB 4: VISUALS
+----------------------------------------------------
+local ExtraTab1 = Window:MakeTab({
+    Name = "VISUALS",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+ExtraTab1:AddButton({
+    Name = "ESP Highlight Players",
+    Callback = function()
+        for _, plr in pairs(game.Players:GetPlayers()) do
+            if plr ~= game.Players.LocalPlayer and plr.Character and not plr.Character:FindFirstChild("CrownHighlight") then
+                local Highlight = Instance.new("Highlight")
+                Highlight.Name = "CrownHighlight"
+                Highlight.Parent = plr.Character
+                Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+            end
+        end
+    end
+})
+
+----------------------------------------------------
+-- TAB 5: MISC
+----------------------------------------------------
+local ExtraTab2 = Window:MakeTab({
+    Name = "MISC",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+ExtraTab2:AddButton({
+    Name = "Rejoin Game",
+    Callback = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+    end
+})
+
+-- Initialize Menu
+OrionLib:Init()
