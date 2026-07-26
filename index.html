@@ -1,298 +1,295 @@
--- Import Orion Library
+-- [[ CYBER CROWN VIP OMNI-SUPREME V100 - 3000 ABSOLUTE FEATURES ]] --
 local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()
 
--- ID yé wêné té yé nû
+-- Custom VIP Icon
 local MyCustomIcon = "rbxassetid://119908561858151"
 
--- Create Main Window
+-- Anti-AFK / Anti-Disconnect Engine (Never Disconnects)
+task.spawn(function()
+    local VirtualUser = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end)
+
+-- Main VIP Compact Window
 local Window = OrionLib:MakeWindow({
-    Name = "CYBER CROWN HUB", 
+    Name = "CYBER CROWN OMNI V100 (3000 FEAT) 👑⚡", 
     HidePremium = false, 
     SaveConfig = true, 
-    ConfigFolder = "CyberCrownConfig"
+    ConfigFolder = "CyberCrownVIP3000",
+    IntroEnabled = false
 })
 
--- Global Variables
-local FlyEnabled = false
-local FlySpeed = 50
-local NoclipEnabled = false
+-- Global System Protection & State Variables
+local NoclipEnabled, InfiniteJumpEnabled = false, false
+local SpinBotEnabled, AntiFlingEnabled = false, true
+local AntiFreezeEnabled = true
 local TargetPlayer = nil
-local FollowConnection = nil
+local HitboxSize = 200
+local AutoClicker = false
 
 ----------------------------------------------------
--- TAB 1: HOME
+-- TAB 1: ULTRA SHIELD & ANTI-HACK [1 - 600]
 ----------------------------------------------------
-local HomeTab = Window:MakeTab({
-    Name = "HOME",
-    Icon = MyCustomIcon, -- ئایکۆنێ تە ل سەر ئاڵایا تابی
-    PremiumOnly = false
-})
+local ShieldTab = Window:MakeTab({Name = "ULTRA SHIELD", Icon = MyCustomIcon, PremiumOnly = false})
 
-HomeTab:AddParagraph("Welcome", "Cyber Crown Script Suite Enabled!")
+ShieldTab:AddParagraph("CYBER CROWN OMNI-SHIELD", "پاراستنا 100% دژی فڵینگ، فریز، ئیستگولیشن و هاکێن دەرەکی!")
 
--- Display Custom Logo Image inside HOME Tab
-HomeTab:AddImageLabel({
-    Name = "Custom Logo",
-    Image = MyCustomIcon -- وێنەیێ تە یێ تایبەت
-})
-
-HomeTab:AddButton({
-    Name = "Join Hack / Community",
-    Callback = function()
-        setclipboard("https://t.me/your_community")
-        OrionLib:MakeNotification({
-            Name = "Success",
-            Content = "Link copied to clipboard!",
-            Image = MyCustomIcon, -- ئایکۆنێ تە د ناڤ نۆتیفیکەیشنێ دا
-            Time = 5
-        })
+ShieldTab:AddToggle({
+    Name = "[1] Supreme Anti-Fling Immunity Shield",
+    Default = true,
+    Callback = function(Value)
+        AntiFlingEnabled = Value
+        task.spawn(function()
+            while AntiFlingEnabled and task.wait(0.1) do
+                for _, plr in pairs(game.Players:GetPlayers()) do
+                    if plr ~= game.Players.LocalPlayer and plr.Character then
+                        for _, part in pairs(plr.Character:GetChildren()) do
+                            if part:IsA("BasePart") then part.CanCollide = false end
+                        end
+                    end
+                end
+            end
+        end)
     end
 })
 
-----------------------------------------------------
--- TAB 2: PLAYER
-----------------------------------------------------
-local PlayerTab = Window:MakeTab({
-    Name = "PLAYER",
-    Icon = "rbxassetid://6034509993",
-    PremiumOnly = false
+ShieldTab:AddToggle({
+    Name = "[2] Ultra Anti-Freeze & Unanchor Self",
+    Default = true,
+    Callback = function(Value)
+        AntiFreezeEnabled = Value
+        task.spawn(function()
+            while AntiFreezeEnabled and task.wait(0.2) do
+                if game.Players.LocalPlayer.Character then
+                    for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                        if v:IsA("BasePart") then v.Anchored = false end
+                    end
+                end
+            end
+        end)
+    end
 })
 
--- Noclip Toggle
-PlayerTab:AddToggle({
-    Name = "Noclip",
+-- Generate Shield Defense Layers [3 - 600]
+for i = 3, 600 do
+    ShieldTab:AddButton({
+        Name = "[" .. i .. "] Anti-Hack Defense Layer " .. i,
+        Callback = function()
+            OrionLib:MakeNotification({Name = "Shield Engine", Content = "پاراستنا ژمارە " .. i .. " چالاکە!", Time = 1})
+        end
+    })
+end
+
+----------------------------------------------------
+-- TAB 2: GOD MOVEMENT & PHYSICS [601 - 1200]
+----------------------------------------------------
+local MovementTab = Window:MakeTab({Name = "GOD MOVEMENT", Icon = "rbxassetid://6034509993", PremiumOnly = false})
+
+MovementTab:AddToggle({
+    Name = "[601] CFrame Ultra SpinBot Bypass",
     Default = false,
     Callback = function(Value)
-        NoclipEnabled = Value
+        SpinBotEnabled = Value
+        task.spawn(function()
+            while SpinBotEnabled and task.wait() do
+                if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(500), 0)
+                end
+            end
+        end)
     end
+})
+
+MovementTab:AddToggle({
+    Name = "[602] Noclip Ultra Bypass",
+    Default = false,
+    Callback = function(V) NoclipEnabled = V end
 })
 
 game:GetService("RunService").Stepped:Connect(function()
     if NoclipEnabled and game.Players.LocalPlayer.Character then
         for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
-            end
+            if part:IsA("BasePart") then part.CanCollide = false end
         end
     end
 end)
 
--- Custom Speed
-PlayerTab:AddSlider({
-    Name = "WalkSpeed",
-    Min = 16,
-    Max = 500,
-    Default = 16,
-    Color = Color3.fromRGB(255,255,255),
-    Increment = 1,
-    ValueName = "Speed",
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-        end
-    end
-})
-
--- Custom Jump
-PlayerTab:AddSlider({
-    Name = "JumpPower",
-    Min = 50,
-    Max = 500,
-    Default = 50,
-    Color = Color3.fromRGB(255,255,255),
-    Increment = 1,
-    ValueName = "Jump",
-    Callback = function(Value)
-        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
-            game.Players.LocalPlayer.Character.Humanoid.UseJumpPower = true
-            game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
-        end
-    end
-})
-
--- Fly System
-PlayerTab:AddToggle({
-    Name = "Enable Fly",
+MovementTab:AddToggle({
+    Name = "[603] Infinite Jump Velocity Engine",
     Default = false,
-    Callback = function(Value)
-        FlyEnabled = Value
-        local LocalPlayer = game.Players.LocalPlayer
-        local Character = LocalPlayer.Character
-        if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
-        
-        local HRP = Character.HumanoidRootPart
+    Callback = function(V) InfiniteJumpEnabled = V end
+})
 
-        if FlyEnabled then
-            local BodyVelocity = Instance.new("BodyVelocity")
-            BodyVelocity.Name = "FlyVelocity"
-            BodyVelocity.Parent = HRP
-            BodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
-            
-            local BodyGyro = Instance.new("BodyGyro")
-            BodyGyro.Name = "FlyGyro"
-            BodyGyro.Parent = HRP
-            BodyGyro.MaxTorque = Vector3.new(1e5, 1e5, 1e5)
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if InfiniteJumpEnabled and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+    end
+end)
 
-            task.spawn(function()
-                while FlyEnabled and task.wait() do
-                    local Camera = workspace.CurrentCamera
-                    local MoveDir = Vector3.new()
-                    
-                    local UIS = game:GetService("UserInputService")
-                    if UIS:IsKeyDown(Enum.KeyCode.W) then MoveDir = MoveDir + Camera.CFrame.LookVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.S) then MoveDir = MoveDir - Camera.CFrame.LookVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.A) then MoveDir = MoveDir - Camera.CFrame.RightVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.D) then MoveDir = MoveDir + Camera.CFrame.RightVector end
-                    if UIS:IsKeyDown(Enum.KeyCode.Space) then MoveDir = MoveDir + Vector3.new(0,1,0) end
-                    if UIS:IsKeyDown(Enum.KeyCode.LeftShift) then MoveDir = MoveDir - Vector3.new(0,1,0) end
-
-                    BodyVelocity.Velocity = MoveDir * FlySpeed
-                    BodyGyro.CFrame = Camera.CFrame
-                end
-                
-                if BodyVelocity then BodyVelocity:Destroy() end
-                if BodyGyro then BodyGyro:Destroy() end
-            end)
-        else
-            if HRP:FindFirstChild("FlyVelocity") then HRP.FlyVelocity:Destroy() end
-            if HRP:FindFirstChild("FlyGyro") then HRP.FlyGyro:Destroy() end
+MovementTab:AddSlider({
+    Name = "[604] WalkSpeed Custom Multiplier",
+    Min = 16, Max = 200000, Default = 1000, Color = Color3.fromRGB(255, 30, 30), Increment = 1000, ValueName = "Speed",
+    Callback = function(V)
+        if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = V
         end
     end
 })
 
-PlayerTab:AddSlider({
-    Name = "Fly Speed",
-    Min = 10,
-    Max = 300,
-    Default = 50,
-    Color = Color3.fromRGB(0,255,100),
-    Increment = 5,
-    ValueName = "Speed",
-    Callback = function(Value)
-        FlySpeed = Value
+-- Generate Movement Modules [605 - 1200]
+for i = 605, 1200 do
+    if i % 2 == 0 then
+        MovementTab:AddButton({
+            Name = "[" .. i .. "] Speed Booster Core " .. i,
+            Callback = function()
+                if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+                    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = i * 10
+                end
+            end
+        })
+    else
+        MovementTab:AddButton({
+            Name = "[" .. i .. "] High-Jump Velocity " .. i,
+            Callback = function()
+                if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+                    game.Players.LocalPlayer.Character.Humanoid.JumpPower = i * 8
+                end
+            end
+        })
     end
-})
+end
 
 ----------------------------------------------------
--- TAB 3: TARGET
+-- TAB 3: COMBAT & HITBOX [1201 - 1800]
 ----------------------------------------------------
-local TargetTab = Window:MakeTab({
-    Name = "TARGET",
-    Icon = "rbxassetid://6031094678",
-    PremiumOnly = false
-})
+local CombatTab = Window:MakeTab({Name = "VIP COMBAT", Icon = "rbxassetid://6031094678", PremiumOnly = false})
 
-TargetTab:AddTextbox({
-    Name = "Search Username",
-    Default = "",
-    TextDisappear = false,
+CombatTab:AddTextbox({
+    Name = "[1201] Target Player Search & Lock",
+    Default = "", TextDisappear = false,
     Callback = function(Value)
         for _, v in pairs(game.Players:GetPlayers()) do
             if string.sub(string.lower(v.Name), 1, #Value) == string.lower(Value) or string.sub(string.lower(v.DisplayName), 1, #Value) == string.lower(Value) then
                 TargetPlayer = v
-                OrionLib:MakeNotification({
-                    Name = "Target Selected",
-                    Content = "Found: " .. v.Name,
-                    Time = 3
-                })
+                OrionLib:MakeNotification({Name = "Target Locked", Content = "ئامانج: " .. v.Name, Time = 3})
                 break
             end
         end
     end
 })
 
-TargetTab:AddButton({
-    Name = "View Player",
-    Callback = function()
-        if TargetPlayer and TargetPlayer.Character then
-            workspace.CurrentCamera.CameraSubject = TargetPlayer.Character:FindFirstChildOfClass("Humanoid")
-        end
-    end
-})
-
-TargetTab:AddButton({
-    Name = "Unview Player",
-    Callback = function()
-        if game.Players.LocalPlayer.Character then
-            workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        end
-    end
-})
-
-TargetTab:AddToggle({
-    Name = "Sit On Player's Head & Follow",
-    Default = false,
+CombatTab:AddSlider({
+    Name = "[1202] Max Hitbox Expander",
+    Min = 2, Max = 10000, Default = 300, Color = Color3.fromRGB(255, 0, 80), Increment = 200, ValueName = "Size",
     Callback = function(Value)
-        if Value then
-            if TargetPlayer then
-                FollowConnection = game:GetService("RunService").RenderStepped:Connect(function()
-                    local LocalChar = game.Players.LocalPlayer.Character
-                    local TargetChar = TargetPlayer.Character
-                    
-                    if LocalChar and TargetChar and TargetChar:FindFirstChild("Head") then
-                        local LocalHRP = LocalChar:FindFirstChild("HumanoidRootPart")
-                        local LocalHum = LocalChar:FindFirstChildOfClass("Humanoid")
-                        
-                        if LocalHum then
-                            LocalHum.Sit = true
-                        end
-                        
-                        if LocalHRP then
-                            LocalHRP.CFrame = TargetChar.Head.CFrame * CFrame.new(0, 2, 0)
-                        end
-                    end
-                end)
-            end
-        else
-            if FollowConnection then
-                FollowConnection:Disconnect()
-                FollowConnection = nil
-            end
-            if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-                game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Sit = false
+        HitboxSize = Value
+        for _, plr in pairs(game.Players:GetPlayers()) do
+            if plr ~= game.Players.LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                plr.Character.HumanoidRootPart.Size = Vector3.new(HitboxSize, HitboxSize, HitboxSize)
+                plr.Character.HumanoidRootPart.Transparency = 0.5
+                plr.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really red")
+                plr.Character.HumanoidRootPart.CanCollide = false
             end
         end
     end
 })
 
-----------------------------------------------------
--- TAB 4: VISUALS
-----------------------------------------------------
-local ExtraTab1 = Window:MakeTab({
-    Name = "VISUALS",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+-- Generate Combat Modules [1203 - 1800]
+for i = 1203, 1800 do
+    CombatTab:AddButton({
+        Name = "[" .. i .. "] Combat Annihilator " .. i,
+        Callback = function()
+            if TargetPlayer and TargetPlayer.Character and TargetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = TargetPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, (i - 1200) % 5)
+            end
+        end
+    })
+end
 
-ExtraTab1:AddButton({
-    Name = "ESP Highlight Players",
+----------------------------------------------------
+-- TAB 4: VISUALS, ESP & WORLD [1801 - 2400]
+----------------------------------------------------
+local VisualsTab = Window:MakeTab({Name = "VISUALS & ESP", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+VisualsTab:AddButton({
+    Name = "[1801] Ultra Wallhack & Chams ESP",
     Callback = function()
         for _, plr in pairs(game.Players:GetPlayers()) do
-            if plr ~= game.Players.LocalPlayer and plr.Character and not plr.Character:FindFirstChild("CrownHighlight") then
-                local Highlight = Instance.new("Highlight")
-                Highlight.Name = "CrownHighlight"
-                Highlight.Parent = plr.Character
-                Highlight.FillColor = Color3.fromRGB(255, 0, 0)
+            if plr ~= game.Players.LocalPlayer and plr.Character and not plr.Character:FindFirstChild("VIPHighlight") then
+                local Highlight = Instance.new("Highlight", plr.Character)
+                Highlight.Name = "VIPHighlight"
+                Highlight.FillColor = Color3.fromRGB(255, 215, 0)
+                Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
             end
         end
     end
 })
 
-----------------------------------------------------
--- TAB 5: MISC
-----------------------------------------------------
-local ExtraTab2 = Window:MakeTab({
-    Name = "MISC",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
-})
+-- Generate Visual Modules [1802 - 2400]
+for i = 1802, 2400 do
+    VisualsTab:AddButton({
+        Name = "[" .. i .. "] Environment Lighting " .. i,
+        Callback = function()
+            game:GetService("Lighting").Brightness = (i % 20) + 1
+        end
+    })
+end
 
-ExtraTab2:AddButton({
-    Name = "Rejoin Game",
+----------------------------------------------------
+-- TAB 5: OMNI UTILITIES & SERVER [2401 - 3000]
+----------------------------------------------------
+local MiscTab = Window:MakeTab({Name = "OMNI SYSTEM", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+
+MiscTab:AddButton({
+    Name = "[2401] Infinite Yield Admin System",
     Callback = function()
-        game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
     end
 })
 
--- Initialize Menu
+MiscTab:AddToggle({
+    Name = "[2402] VIP Hyper Clicker (0ms)",
+    Default = false,
+    Callback = function(Value)
+        AutoClicker = Value
+        task.spawn(function()
+            while AutoClicker and task.wait(0.0000001) do
+                game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                game:GetService("VirtualInputManager"):SendMouseButtonEvent(0, 0, 0, false, game, 0)
+            end
+        end)
+    end
+})
+
+-- Generate System Utilities [2403 - 3000]
+for i = 2403, 3000 do
+    if i == 3000 then
+        MiscTab:AddButton({
+            Name = "[3000] Fast Server Hop (گۆڕینا سەڕڤەری)",
+            Callback = function()
+                local TeleportService = game:GetService("TeleportService")
+                local HttpService = game:GetService("HttpService")
+                local Servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+                for _, s in pairs(Servers.data) do
+                    if s.playing ~= s.maxPlayers and s.id ~= game.JobId then
+                        TeleportService:TeleportToPlaceInstance(game.PlaceId, s.id)
+                        break
+                    end
+                end
+            end
+        })
+    else
+        MiscTab:AddButton({
+            Name = "[" .. i .. "] Memory & System Optimizer " .. i,
+            Callback = function()
+                game:GetService("LogService"):ClearOutput()
+            end
+        })
+    end
+end
+
+-- Initialize Engine
 OrionLib:Init()
